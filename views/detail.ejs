@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>오늘은 뭐 먹지?</title>
+    <!-- css 초기화 -->
+    <!-- <link rel="stylesheet" href="/static/css/resset.css" /> -->
+    <!-- common CSS -->
+    <link rel="stylesheet" href="/static/css/common.css" />
+    <!-- index CSS -->
+    <link rel="stylesheet" href="/static/css/detail.css" />
+
+  <!-- edit -->
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/44.1.0/ckeditor5.css" crossorigin>
+
+  <!-- cdn -->
+   <script
+      src="https://kit.fontawesome.com/6dd6eb0895.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+  </head>
+  <body>
+    <header>
+      <div class="inner">
+        <div class="logoBox">
+          <a class="logoTitle" href="/"
+            ><img src="/static/img/logo/b_logo.png" alt="로고" />
+            <span>오늘은 뭐 먹지?</span></a
+          >
+          <div class="gnb">
+            <!-- 로그인시  태그변경 -->
+            <% if(!true){ %>
+            <a href="/users/login">내정보</a>
+            <a href="/users/login">로그아웃</a>
+            <%}else{%>
+            <a href="/users/login">로그인</a>
+            <a href="/users/login">회원가입</a>
+            <%} %>
+          </div>
+        </div>
+        <div class="headMenu">
+          <div class="backMove">
+            <a href="/"
+              ><img src="/static/img/icons/ArrowLeft2.png" alt=""
+            /></a>
+          </div>
+          <div class="title">
+            <h3>뒤로가기</h3>
+          </div>
+        </div>
+      </div>
+    </header>
+    <main>
+      <div class="container">
+        <div class="item">
+          <div class="thumbnail">
+            <iframe
+              src="https://www.youtube.com/embed/<%= video.videoId %>"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+            >
+            </iframe>
+          </div>
+          <div class="description">
+            <div class="recipeHead">
+              <h3 class="title"><%= video.title %></h3>
+              <!-- 북마크 -->
+              <form action="post" name="bookmark">
+                <button
+                  type="button"
+                  id="bookmarkBtn"
+                  class="bookmarkButton-off"
+                  data-status=fasle
+                  onclick="toggle_bookmark();"
+                >
+                  <i class="fa-regular fa-heart"></i>북마크
+                </button>
+              </form>
+            </div>
+
+            <p class="creator"><%= video.channelTitle %></p>
+            <p class="subtitle subtitle-off"><%= video.description %></p>
+            <div class="moreLine">
+              <div></div>
+              <p>더보기</p>
+              <div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="memoBox">
+        <div class="blur"></div>
+        <!-- 재료 메모박스 -->
+        <div class="memoItem ing">
+          <p class="title">재료 메모장</p>
+          <form class="ingForm-Open" name="memo" method="post">
+            <input type="hidden" id="videoId" value="<%= video.videoId %>">
+              <input type="hidden" id="title" value="<%= video.title %>">
+              <input type="hidden" id="thumbnailUrl" value="<%= video.thumbnail %>">
+              <input type="hidden" id="channelTitle" value="<%= video.channelTitle %>">
+            <div id="ingData"></div>
+          <div class="memoButtons">
+            <button type="button" class="btn btnClose" onclick="ingReset()" >내용 초기화</button>
+            <button type="button" class="btn btnClose" onclick="ingForm();">수정취소</button>
+            <button type="button" class="btn btnOpen registr" >등록</button>
+          </div>
+        </form>
+
+        <!-- 재료 뷰 -->
+        <form  class="ingForm" name="memo" method="post">
+          <textarea class="ingredientTextarea" name="" id="" readonly>🌽🥬🫑재료s를 입력해보세요!😊</textarea>
+          <div class="memoButtons">
+            <button type="button" class="btn btnOpen" onclick="ingForm();" >수정</button>
+          </div>
+        </form> 
+
+        </div>
+        <!-- 재료 메모박스 끝 -->
+
+        <!-- 레시피 메모박스 -->
+        <div class="memoItem rcp">
+          <p class="title">레시피 메모장</p>
+          <form  class="rcpForm-Open" name="memo" method="post">
+            <input type="hidden" id="videoId" value="<%= video.videoId %>">
+              <input type="hidden" id="title" value="<%= video.title %>">
+              <input type="hidden" id="thumbnailUrl" value="<%= video.thumbnail %>">
+              <input type="hidden" id="channelTitle" value="<%= video.channelTitle %>">
+              <div id="rcpData"></div>
+            <div class="memoButtons">
+              <button type="button" class="btn btnClose" onclick="rcpReset()" >내용 초기화</button>
+            <button type="button" class="btn btnClose" onclick="rcpForm();">수정취소</button>
+              <button type="button" class="btn btnOpen registr" >등록</button>
+            </div>
+          </form>
+          <!-- 레시피 뷰 -->
+          <form  class="rcpForm" name="memo" method="post">
+            <textarea class="RecipeTextarea" name="" id="" readonly>📌🪄레시피를 입력해보세요!🧑‍🍳</textarea>
+            <div class="memoButtons">
+              <button type="button" class="btn btnOpen" onclick="rcpForm();" >수정</button>
+            </div>
+          </form> 
+        </div>
+
+         <!-- 레시피 메모박스 끝 -->
+      </div>
+    </main>
+    <footer>
+      <p>Copyright 2024. Team 2TheCode All rights reserved.</p>
+    </footer>
+    <div class="mgnb">
+      <div class="menubox">
+        <div class="menu">
+          <a href="/"><img src="/static/img/icons/Home.png" alt="홈버튼" /></a>
+        </div>
+        <div class="menu">
+          <a href="/favorites"
+            ><img src="/static/img/icons/Heart.png" alt="즐겨찾기"
+          /></a>
+        </div>
+        <div class="menu">
+          <!-- 로그인시  태그변경 -->
+          <% if(!true){ %>
+          <a href="users/login"
+            ><img src="/static/img/icons/Login.png" alt="로그인"
+          /></a>
+          <%}else{%>
+          <a href="users/logout"
+            ><img src="/static/img/icons/Profile.png" alt="프로필"
+          /></a>
+          <%} %>
+        </div>
+      </div>
+    </div>
+
+    <!-- edit -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/44.1.0/ckeditor5.umd.js" crossorigin></script>
+		<script src="https://cdn.ckeditor.com/ckeditor5/44.1.0/translations/ko.umd.js" crossorigin></script>
+		<script src="/static/js/detail.js"></script>
+  </body>
+</html>
